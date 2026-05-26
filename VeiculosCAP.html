@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marcopolo - Gestão de Entrada de Linha - Alex</title>
+    
+    <!-- Meta Tags para Compartilhamento no WhatsApp (Open Graph) -->
+    <meta property="og:title" content="Marcopolo - Gestão de Entrada de Linha">
+    <meta property="og:description" content="Ferramenta inteligente de extração de frota, consulta de modelos e gerador rápido de entrada de linha para WhatsApp. Desenvolvido por Daniel Capetini para Alex Lemos.">
+    <meta property="og:image" content="https://raw.githubusercontent.com/danielrochacapetini-ai/Projeto-Alex-Lemos/main/marcopolo-logo.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://danielrochacapetini-ai.github.io/Projeto-Alex-Lemos/VeiculosCAP.html">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffffff;
+            color: #333333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+            border-bottom: 3px solid #ff8c00;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 48px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .tagline {
+            font-size: 16px;
+            color: #666666;
+            font-weight: 300;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .tabs-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 15px 30px;
+            background: transparent;
+            border: none;
+            color: #666666;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        .tab-button:hover {
+            color: #ff8c00;
+        }
+
+        .tab-button.active {
+            color: #ff8c00;
+            border-bottom-color: #ff8c00;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            background: #ffffff;
+            border: 2px solid #ff8c00;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(255, 140, 0, 0.15);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #ff8c00;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="file"],
+        input[type="text"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 14px 16px;
+            background: #f5f5f5;
+            border: 2px solid #ff8c00;
+            border-radius: 8px;
+            color: #333333;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input[type="file"]::file-selector-button {
+            background: #ff8c00;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        input[type="file"]::file-selector-button:hover {
+            background: #ffa500;
+            transform: translateY(-2px);
+        }
+
+        input[type="text"]:focus,
+        input[type="file"]:focus,
+        input[type="date"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #ff8c00;
+            box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.2);
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 14px 24px;
+            background: linear-gradient(135deg, #ff8c00 0%, #ffa500 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 140, 0, 0.4);
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        button.secondary {
+            background: linear-gradient(135deg, #3a4060 0%, #4a5070 100%);
+            box-shadow: 0 4px 15px rgba(58, 64, 96, 0.3);
+        }
+
+        button.secondary:hover {
+            box-shadow: 0 6px 20px rgba(58, 64, 96, 0.4);
+        }
+
+        .status-container {
+            margin-top: 15px;
+            margin-bottom: 15px;
+            min-height: 20px;
+        }
+
+        .resultado {
+            margin-top: 15px;
+            background: #f9f9f9;
+            border-left: 5px solid #ff8c00;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 250px;
+            max-height: 500px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #ff8c00;
+            white-space: pre-wrap;
+            word-break: break-all;
+            line-height: 1.6;
+        }
+
+        .resultado::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .resultado::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 4px;
+        }
+
+        .resultado::-webkit-scrollbar-thumb {
+            background: #ff8c00;
+            border-radius: 4px;
+        }
+
+        .resultado::-webkit-scrollbar-thumb:hover {
+            background: #ffa500;
+        }
+
+        .status-message {
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .status-info {
+            background: rgba(100, 150, 200, 0.1);
+            color: #0066cc;
+            border-left: 4px solid #0066cc;
+        }
+
+        .status-success {
+            background: rgba(76, 175, 80, 0.1);
+            color: #2e7d32;
+            border-left: 4px solid #2e7d32;
+        }
+
+        .status-error {
+            background: rgba(244, 67, 54, 0.1);
+            color: #c62828;
+            border-left: 4px solid #c62828;
+        }
+
+        .search-result {
+            background: #f9f9f9;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .search-result.found {
+            border-color: #2e7d32;
+            background: linear-gradient(135deg, #ffffff 0%, rgba(76, 175, 80, 0.05) 100%);
+        }
+
+        .search-result.not-found {
+            border-color: #c62828;
+            background: linear-gradient(135deg, #ffffff 0%, rgba(244, 67, 54, 0.05) 100%);
+        }
+
+        .result-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666666;
+            margin-bottom: 8px;
+        }
+
+        .result-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ff8c00;
+            margin-bottom: 15px;
+        }
+
+        .result-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .detail-item {
+            background: #f5f5f5;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid #ff8c00;
+        }
+
+        .detail-label {
+            font-size: 11px;
+            color: #666666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333333;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .filtros-container {
+            background: rgba(255, 140, 0, 0.05);
+            border: 1px solid #ffe0cc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .filtro-grupo {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .filtro-grupo:last-child {
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 36px;
+            }
+
+            .grid-2,
+            .button-group,
+            .filtro-grupo {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs-container {
+                justify-content: center;
+            }
+
+            .tab-button {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .result-details {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .info-box {
+            background: rgba(100, 150, 200, 0.08);
+            border-left: 4px solid #0066cc;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #333333;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999999;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">MARCOPOLO</div>
+            <div class="tagline">Gestão de Entrada de Linha 440 - Alex Lemos</div>
+        </header>
+
+        <div class="tabs-container">
+            <button class="tab-button active" onclick="switchTab('extrator')">
+                 Inserir Dados
+            </button>
+            <button class="tab-button" onclick="switchTab('consulta')">
+                 Consulta de Modelo
+            </button>
+            <button class="tab-button" onclick="switchTab('gerador')">
+                 Gerar Entrada de Linha
+            </button>
+        </div>
+
+        <!-- ABA 1: EXTRATOR DE PDF -->
+        <div id="extrator" class="tab-content active">
+            <div class="card">
+                <div class="info-box">
+                    Carregue um PDF com dados de frota para extrair automaticamente os números de veículos, datas e modelos.
+                </div>
+
+                <div class="form-group">
+                    <label>Selecionar Arquivo PDF</label>
+                    <input type="file" id="pdf" accept=".pdf">
+                </div>
+
+                <div id="filtros-dinamicos" class="filtros-container" style="display: none;">
+                    <label style="display: block; margin-bottom: 15px; font-weight: 600; color: #ff8c00; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">🔍 Filtros Disponíveis</label>
+                    <div id="filtros-content"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Formato de Cópia</label>
+                    <select id="formatoSaida">
+                        <option value="tabela">Tabela (Padrão)</option>
+                        <option value="whatsapp">WhatsApp</option>
+                        <option value="csv">CSV</option>
+                    </select>
+                </div>
+
+                <div class="button-group">
+                    <button onclick="copiarTudo()">Copiar</button>
+                </div>
+
+                <div id="status-extrator" class="status-container"></div>
+
+                <div id="resultado" class="resultado">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <div>Aguardando arquivo PDF...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA 2: CONSULTA DE MODELO -->
+        <div id="consulta" class="tab-content">
+            <div class="card">
+                <div class="info-box">
+                    Digite os 4 últimos dígitos do número do carro para identificar o modelo e informações do veículo. Extraia um PDF primeiro para popular a base de dados.
+                </div>
+
+                <div class="form-group">
+                    <label>Últimos 4 Dígitos do Carro</label>
+                    <input type="text" id="prefixo" placeholder="Ex: 6054" maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                </div>
+
+                <button onclick="buscarModelo()" style="width: 100%;">Buscar Modelo</button>
+
+                <div id="resultado-consulta"></div>
+            </div>
+        </div>
+
+        <!-- ABA 3: GERADOR RÁPIDO -->
+        <div id="gerador" class="tab-content">
+            <div class="card">
+                <div class="info-box">
+                    Digite os 4 últimos dígitos de cada carro para gerar a lista formatada para WhatsApp. Confirme com Enter ou clique no botão.
+                </div>
+
+                <div class="form-group">
+                    <label>Data (Opcional)</label>
+                    <input type="date" id="gerador-data">
+                </div>
+
+                <div class="form-group">
+                    <label>Últimos 4 Dígitos do Carro</label>
+                    <input type="text" id="gerador-prefixo" placeholder="Ex: 6054" maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                </div>
+
+                <button onclick="adicionarAoGerador()" style="width: 100%; margin-bottom: 20px;">Adicionar</button>
+
+                <div class="button-group">
+                    <button onclick="copiarGerador()">Copiar Lista</button>
+                    <button class="secondary" onclick="limparGerador()">Limpar</button>
+                </div>
+
+                <div id="resultado-gerador" class="resultado">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📝</div>
+                        <div>Comece digitando os 4 dígitos...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+
+    <script>
+        let baseDadosExtraida = [];
+        let ultimoResultadoCompleto = '';
+        let ultimoResultadoFiltrado = '';
+        let colunasDisponiveis = {};
+        let listaGerador = [];
+        let contadorGerador = 1;
+
+        function switchTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.tab-button');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        document.getElementById('pdf').addEventListener('change', function() {
+            extrair();
+        });
+
+        async function extrair() {
+            const arquivo = document.getElementById('pdf').files[0];
+
+            if (!arquivo) {
+                return;
+            }
+
+            document.getElementById('status-extrator').innerHTML = '<div class="status-message status-info">Extraindo dados do PDF...</div>';
+
+            try {
+                const arrayBuffer = await arquivo.arrayBuffer();
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+                let baseDadosTemp = [];
+                let contador = 1;
+                let resultado = '';
+
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const pagina = await pdf.getPage(i);
+                    const conteudo = await pagina.getTextContent();
+                    const items = conteudo.items;
+
+                    // 1. Agrupar itens por coordenada Y com tolerância de 5 pixels
+                    const tolerance = 5;
+                    const rows = [];
+
+                    items.forEach(item => {
+                        const y = item.transform[5];
+                        let foundRow = rows.find(r => Math.abs(r.y - y) <= tolerance);
+                        if (!foundRow) {
+                            foundRow = { y: y, items: [] };
+                            rows.push(foundRow);
+                        }
+                        foundRow.items.push(item);
+                    });
+
+                    // 2. Ordenar as linhas de cima para baixo (Y decrescente)
+                    rows.sort((a, b) => b.y - a.y);
+
+                    // 3. Analisar cada linha para extrair as colunas usando coordenadas X precisas
+                    rows.forEach(row => {
+                        row.items.sort((a, b) => a.transform[4] - b.transform[4]);
+
+                        // Encontrar o veículo (X ~ 157-158)
+                        const carItem = row.items.find(item => item.str.match(/^V[VW]005\d+/));
+                        if (carItem) {
+                            const veiculo = carItem.str;
+
+                            // Encontrar data (X ~ 5)
+                            const dataItem = row.items.find(item => Math.abs(item.transform[4] - 5) <= 5 && item.str.match(/^\d{2}\/\d{2}/));
+                            const data = dataItem ? dataItem.str : "N/A";
+
+                            // Encontrar modelo (X ~ 210)
+                            const modeloItem = row.items.find(item => Math.abs(item.transform[4] - 210) <= 5);
+                            const modelo = modeloItem ? modeloItem.str : "N/A";
+
+                            // Encontrar posição (X ~ 501)
+                            const posicaoItem = row.items.find(item => Math.abs(item.transform[4] - 501) <= 5);
+                            let posicao = posicaoItem ? posicaoItem.str.trim() : "";
+
+                            // Encontrar posto (X ~ 569)
+                            const postoItem = row.items.find(item => Math.abs(item.transform[4] - 569) <= 5);
+                            let posto = postoItem ? postoItem.str.trim() : "";
+
+                            // Limpar hífens ou dados irrelevantes
+                            if (posto === '-' || posto === 'Maio') posto = '';
+                            if (posicao === '-' || posicao === 'Maio') posicao = '';
+
+                            baseDadosTemp.push({
+                                numero: veiculo,
+                                ultimos4: veiculo.slice(-4),
+                                modelo: modelo,
+                                data: data,
+                                posicao: posicao,
+                                posto: posto
+                            });
+
+                            resultado += String(contador).padStart(3, '0') + ' | ' + data + ' | ' + veiculo + ' | ' + modelo + (posicao ? ' | ' + posicao : ' | ') + (posto ? ' | ' + posto : ' | ') + '\n';
+                            contador++;
+                        }
+                    });
+                }
+
+                baseDadosExtraida = baseDadosTemp;
+
+                if (resultado === '') {
+                    resultado = 'Nenhum veículo encontrado no PDF.';
+                    document.getElementById('resultado').innerHTML = '<div class="empty-state"><div class="empty-state-icon">📋</div><div>' + resultado + '</div></div>';
+                    document.getElementById('status-extrator').innerHTML = '<div class="status-message status-error">' + resultado + '</div>';
+                    ultimoResultadoCompleto = '';
+                    ultimoResultadoFiltrado = '';
+                } else {
+                    ultimoResultadoCompleto = resultado.trim();
+                    ultimoResultadoFiltrado = '';
+                    document.getElementById('status-extrator').innerHTML = '<div class="status-message status-success">✓ ' + (contador - 1) + ' veículos encontrados</div>';
+
+                    extrairColunas();
+                    criarFiltrosDinamicos();
+                    exibirResultado();
+                }
+            } catch (erro) {
+                console.error('Erro ao processar PDF:', erro);
+                document.getElementById('status-extrator').innerHTML = '<div class="status-message status-error">Erro ao processar PDF. Tente novamente.</div>';
+                document.getElementById('resultado').innerHTML = '<div class="empty-state"><div class="empty-state-icon">❌</div><div>Erro ao processar PDF</div></div>';
+            }
+        }
+
+        function extrairColunas() {
+            colunasDisponiveis = {
+                'data': new Set(),
+                'modelo': new Set(),
+                'posicao': new Set(),
+                'posto': new Set()
+            };
+
+            baseDadosExtraida.forEach(item => {
+                colunasDisponiveis.data.add(item.data);
+                colunasDisponiveis.modelo.add(item.modelo);
+                if (item.posicao) colunasDisponiveis.posicao.add(item.posicao);
+                if (item.posto) colunasDisponiveis.posto.add(item.posto);
+            });
+
+            colunasDisponiveis.data = Array.from(colunasDisponiveis.data).sort();
+            colunasDisponiveis.modelo = Array.from(colunasDisponiveis.modelo).sort();
+            colunasDisponiveis.posicao = Array.from(colunasDisponiveis.posicao).sort();
+            colunasDisponiveis.posto = Array.from(colunasDisponiveis.posto).sort();
+        }
+
+        function criarFiltrosDinamicos() {
+            const container = document.getElementById('filtros-content');
+            const filtrosDiv = document.getElementById('filtros-dinamicos');
+            
+            container.innerHTML = '';
+
+            const filtroGrupo1 = document.createElement('div');
+            filtroGrupo1.className = 'filtro-grupo';
+
+            const labelData = document.createElement('label');
+            labelData.textContent = 'Filtrar por Data';
+            labelData.style.display = 'block';
+            labelData.style.marginBottom = '10px';
+            labelData.style.fontWeight = '600';
+            labelData.style.color = '#ff8c00';
+            labelData.style.fontSize = '14px';
+            labelData.style.textTransform = 'uppercase';
+            labelData.style.letterSpacing = '0.5px';
+
+            const selectData = document.createElement('select');
+            selectData.id = 'filtro-data-select';
+            selectData.innerHTML = '<option value="">-- Selecione uma data --</option>';
+            colunasDisponiveis.data.forEach(data => {
+                const option = document.createElement('option');
+                option.value = data;
+                option.textContent = data;
+                selectData.appendChild(option);
+            });
+            selectData.addEventListener('change', aplicarFiltros);
+
+            const dataDiv = document.createElement('div');
+            dataDiv.appendChild(labelData);
+            dataDiv.appendChild(selectData);
+
+            const labelModelo = document.createElement('label');
+            labelModelo.textContent = 'Filtrar por Modelo';
+            labelModelo.style.display = 'block';
+            labelModelo.style.marginBottom = '10px';
+            labelModelo.style.fontWeight = '600';
+            labelModelo.style.color = '#ff8c00';
+            labelModelo.style.fontSize = '14px';
+            labelModelo.style.textTransform = 'uppercase';
+            labelModelo.style.letterSpacing = '0.5px';
+
+            const selectModelo = document.createElement('select');
+            selectModelo.id = 'filtro-modelo-select';
+            selectModelo.innerHTML = '<option value="">-- Selecione um modelo --</option>';
+            colunasDisponiveis.modelo.forEach(modelo => {
+                const option = document.createElement('option');
+                option.value = modelo;
+                option.textContent = modelo;
+                selectModelo.appendChild(option);
+            });
+            selectModelo.addEventListener('change', aplicarFiltros);
+
+            const modeloDiv = document.createElement('div');
+            modeloDiv.appendChild(labelModelo);
+            modeloDiv.appendChild(selectModelo);
+
+            filtroGrupo1.appendChild(dataDiv);
+            filtroGrupo1.appendChild(modeloDiv);
+            container.appendChild(filtroGrupo1);
+
+            const filtroGrupo2 = document.createElement('div');
+            filtroGrupo2.className = 'filtro-grupo';
+
+            const labelPosicao = document.createElement('label');
+            labelPosicao.textContent = 'Filtrar por Posicao';
+            labelPosicao.style.display = 'block';
+            labelPosicao.style.marginBottom = '10px';
+            labelPosicao.style.fontWeight = '600';
+            labelPosicao.style.color = '#ff8c00';
+            labelPosicao.style.fontSize = '14px';
+            labelPosicao.style.textTransform = 'uppercase';
+            labelPosicao.style.letterSpacing = '0.5px';
+
+            const selectPosicao = document.createElement('select');
+            selectPosicao.id = 'filtro-posicao-select';
+            selectPosicao.innerHTML = '<option value="">-- Selecione uma posicao --</option>';
+            colunasDisponiveis.posicao.forEach(posicao => {
+                const option = document.createElement('option');
+                option.value = posicao;
+                option.textContent = posicao;
+                selectPosicao.appendChild(option);
+            });
+            selectPosicao.addEventListener('change', aplicarFiltros);
+
+            const posicaoDiv = document.createElement('div');
+            posicaoDiv.appendChild(labelPosicao);
+            posicaoDiv.appendChild(selectPosicao);
+
+            const labelPosto = document.createElement('label');
+            labelPosto.textContent = 'Filtrar por Posto';
+            labelPosto.style.display = 'block';
+            labelPosto.style.marginBottom = '10px';
+            labelPosto.style.fontWeight = '600';
+            labelPosto.style.color = '#ff8c00';
+            labelPosto.style.fontSize = '14px';
+            labelPosto.style.textTransform = 'uppercase';
+            labelPosto.style.letterSpacing = '0.5px';
+
+            const selectPosto = document.createElement('select');
+            selectPosto.id = 'filtro-posto-select';
+            selectPosto.innerHTML = '<option value="">-- Selecione um posto --</option>';
+            colunasDisponiveis.posto.forEach(posto => {
+                const option = document.createElement('option');
+                option.value = posto;
+                option.textContent = posto;
+                selectPosto.appendChild(option);
+            });
+            selectPosto.addEventListener('change', aplicarFiltros);
+
+            const postoDiv = document.createElement('div');
+            postoDiv.appendChild(labelPosto);
+            postoDiv.appendChild(selectPosto);
+
+            filtroGrupo2.appendChild(posicaoDiv);
+            filtroGrupo2.appendChild(postoDiv);
+            container.appendChild(filtroGrupo2);
+
+            filtrosDiv.style.display = 'block';
+        }
+
+        function aplicarFiltros() {
+            const dataFiltro = document.getElementById('filtro-data-select').value;
+            const modeloFiltro = document.getElementById('filtro-modelo-select').value;
+            const posicaoFiltro = document.getElementById('filtro-posicao-select').value;
+            const postoFiltro = document.getElementById('filtro-posto-select').value;
+
+            if (!dataFiltro && !modeloFiltro && !posicaoFiltro && !postoFiltro) {
+                ultimoResultadoFiltrado = '';
+                exibirResultado();
+                document.getElementById('status-extrator').innerHTML = '<div class="status-message status-success">✓ ' + baseDadosExtraida.length + ' veículos encontrados</div>';
+                return;
+            }
+
+            // Filtrar usando o array estruturado para garantir 100% de precisão por coluna
+            const filtrados = baseDadosExtraida.filter(item => {
+                if (dataFiltro && item.data !== dataFiltro) return false;
+                if (modeloFiltro && item.modelo !== modeloFiltro) return false;
+                if (posicaoFiltro && item.posicao !== posicaoFiltro) return false;
+                if (postoFiltro && item.posto !== postoFiltro) return false;
+                return true;
+            });
+
+            if (filtrados.length === 0) {
+                document.getElementById('resultado').innerHTML = '<div class="empty-state"><div class="empty-state-icon">📋</div><div>Nenhum veículo encontrado com os filtros selecionados</div></div>';
+                document.getElementById('status-extrator').innerHTML = '<div class="status-message status-error">Nenhum veículo encontrado</div>';
+                ultimoResultadoFiltrado = '';
+                return;
+            }
+
+            // Reconstruir a string de resultado filtrado
+            let resultado = '';
+            filtrados.forEach((item, index) => {
+                resultado += String(index + 1).padStart(3, '0') + ' | ' + item.data + ' | ' + item.numero + ' | ' + item.modelo + (item.posicao ? ' | ' + item.posicao : ' | ') + (item.posto ? ' | ' + item.posto : ' | ') + '\n';
+            });
+
+            ultimoResultadoFiltrado = resultado.trim();
+            document.getElementById('status-extrator').innerHTML = '<div class="status-message status-success">✓ ' + filtrados.length + ' veículos encontrados</div>';
+            exibirResultado();
+        }
+
+        document.getElementById('formatoSaida').addEventListener('change', function() {
+            exibirResultado();
+        });
+
+        function exibirResultado() {
+            const formato = document.getElementById('formatoSaida').value;
+            const dados = ultimoResultadoFiltrado || ultimoResultadoCompleto;
+
+            if (!dados) {
+                document.getElementById('resultado').innerHTML = '<div class="empty-state"><div class="empty-state-icon">📋</div><div>Aguardando arquivo PDF...</div></div>';
+                return;
+            }
+
+            let conteudo = '';
+
+            if (formato === 'tabela') {
+                conteudo = dados;
+            } else if (formato === 'whatsapp') {
+                conteudo = formatarWhatsApp(dados);
+            } else if (formato === 'csv') {
+                conteudo = formatarCSV(dados);
+            }
+
+            document.getElementById('resultado').innerHTML = '<div class="resultado">' + conteudo + '</div>';
+        }
+
+        function copiarTudo() {
+            const resultado = document.getElementById('resultado').innerText;
+
+            if (resultado.includes('Aguardando')) {
+                alert('Nenhum resultado para copiar');
+                return;
+            }
+
+            navigator.clipboard.writeText(resultado).then(() => {
+                alert('Resultado copiado para a área de transferência!');
+            });
+        }
+
+        function buscarModelo() {
+            const prefixo = document.getElementById('prefixo').value.trim();
+            const container = document.getElementById('resultado-consulta');
+
+            if (!prefixo) {
+                container.innerHTML = '<div class="status-message status-error">Digite um prefixo válido (4 dígitos)</div>';
+                return;
+            }
+
+            if (prefixo.length !== 4) {
+                container.innerHTML = '<div class="status-message status-error">O prefixo deve ter exatamente 4 dígitos</div>';
+                return;
+            }
+
+            if (baseDadosExtraida.length === 0) {
+                container.innerHTML = '<div class="status-message status-error">Nenhum PDF foi extraído. Extraia um PDF primeiro na aba "Extrator de PDF"</div>';
+                return;
+            }
+
+            const veiculos = baseDadosExtraida.filter(v => v.ultimos4 === prefixo);
+
+            if (veiculos.length === 0) {
+                container.innerHTML = `
+                    <div class="search-result not-found">
+                        <div class="result-label">Prefixo</div>
+                        <div class="result-value">${prefixo}</div>
+                        <p style="margin-top: 15px; color: #f44336;">Nenhum veículo encontrado com este prefixo.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            veiculos.forEach((veiculo, index) => {
+                html += `
+                    <div class="search-result found" style="margin-top: ${index > 0 ? '15px' : '20px'};">
+                        <div class="result-label">Veículo ${index + 1}</div>
+                        <div class="result-value">${veiculo.numero}</div>
+                        <div class="result-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Modelo</div>
+                                <div class="detail-value">${veiculo.modelo}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Data</div>
+                                <div class="detail-value">${veiculo.data}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        document.getElementById('prefixo').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                buscarModelo();
+            }
+        });
+
+        document.getElementById('gerador-prefixo').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                adicionarAoGerador();
+            }
+        });
+
+        function adicionarAoGerador() {
+            const prefixo = document.getElementById('gerador-prefixo').value.trim();
+
+            if (!prefixo) {
+                alert('Digite um prefixo válido (4 dígitos)');
+                return;
+            }
+
+            if (prefixo.length !== 4) {
+                alert('O prefixo deve ter exatamente 4 dígitos');
+                return;
+            }
+
+            if (baseDadosExtraida.length === 0) {
+                alert('Nenhum PDF foi extraído. Extraia um PDF primeiro na aba "Extrator de PDF"');
+                return;
+            }
+
+            const veiculos = baseDadosExtraida.filter(v => v.ultimos4 === prefixo);
+
+            if (veiculos.length === 0) {
+                alert('Nenhum veículo encontrado com este prefixo.');
+                return;
+            }
+
+            veiculos.forEach(veiculo => {
+                listaGerador.push({
+                    numero: veiculo.numero,
+                    modelo: veiculo.modelo,
+                    ordem: contadorGerador
+                });
+                contadorGerador++;
+            });
+
+            document.getElementById('gerador-prefixo').value = '';
+            document.getElementById('gerador-prefixo').focus();
+            exibirGerador();
+        }
+
+        function exibirGerador() {
+            if (listaGerador.length === 0) {
+                document.getElementById('resultado-gerador').innerHTML = '<div class="empty-state"><div class="empty-state-icon">📝</div><div>Comece digitando os 4 dígitos...</div></div>';
+                return;
+            }
+
+            const dataGerador = document.getElementById('gerador-data').value;
+            const dataFormatada = dataGerador ? dataGerador.split('-').reverse().slice(0, 2).join('/') : '';
+
+            let conteudo = '';
+            if (dataFormatada) {
+                conteudo += '*ENTRADA DE LINHA* ' + dataFormatada + '\n';
+            }
+
+            listaGerador.forEach(item => {
+                conteudo += item.ordem + 'º - ' + item.numero + ' _' + item.modelo + '_\n';
+            });
+
+            document.getElementById('resultado-gerador').innerHTML = '<div class="resultado">' + conteudo.trim() + '</div>';
+        }
+
+        function copiarGerador() {
+            if (listaGerador.length === 0) {
+                alert('Nenhum veículo adicionado');
+                return;
+            }
+
+            const dataGerador = document.getElementById('gerador-data').value;
+            const dataFormatada = dataGerador ? dataGerador.split('-').reverse().slice(0, 2).join('/') : '';
+
+            let conteudo = '';
+            if (dataFormatada) {
+                conteudo += '*ENTRADA DE LINHA* ' + dataFormatada + '\n';
+            }
+
+            listaGerador.forEach(item => {
+                conteudo += item.ordem + 'º - ' + item.numero + ' _' + item.modelo + '_\n';
+            });
+
+            navigator.clipboard.writeText(conteudo.trim()).then(() => {
+                alert('Lista copiada para a área de transferência!');
+            });
+        }
+
+        function limparGerador() {
+            listaGerador = [];
+            contadorGerador = 1;
+            document.getElementById('gerador-prefixo').value = '';
+            document.getElementById('gerador-data').value = '';
+            document.getElementById('resultado-gerador').innerHTML = '<div class="empty-state"><div class="empty-state-icon">📝</div><div>Comece digitando os 4 dígitos...</div></div>';
+        }
+
+        document.getElementById('gerador-data').addEventListener('change', function() {
+            exibirGerador();
+        });
+
+        function formatarWhatsApp(dados) {
+            if (!dados) return '';
+
+            const linhas = dados.split('\n').filter(l => l.trim());
+            if (linhas.length === 0) return '';
+
+            const primeiraLinha = linhas[0];
+            const partes = primeiraLinha.split('|');
+            const data = partes[1] ? partes[1].trim() : '';
+
+            let resultado = '*ENTRADA DE LINHA* ' + data + '\n';
+
+            linhas.forEach((linha, index) => {
+                const partes = linha.split('|');
+                if (partes.length >= 4) {
+                    const numero = partes[2].trim();
+                    const modelo = partes[3].trim();
+                    resultado += (index + 1) + 'º - ' + numero + ' _' + modelo + '_\n';
+                }
+            });
+
+            return resultado.trim();
+        }
+
+        function formatarCSV(dados) {
+            if (!dados) return '';
+
+            const linhas = dados.split('\n').filter(l => l.trim());
+            if (linhas.length === 0) return '';
+
+            let resultado = 'Nº,Data,Veículo,Modelo\n';
+
+            linhas.forEach(linha => {
+                const partes = linha.split('|').map(p => p.trim());
+                if (partes.length >= 4) {
+                    resultado += partes[0] + ',' + partes[1] + ',' + partes[2] + ',' + partes[3] + '\n';
+                }
+            });
+
+            return resultado.trim();
+        }
+    </script>
+</body>
+</html>
